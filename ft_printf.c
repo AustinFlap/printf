@@ -6,20 +6,37 @@
 /*   By: avieira <avieira@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/12 14:17:05 by avieira           #+#    #+#             */
-/*   Updated: 2019/11/12 16:13:07 by avieira          ###   ########.fr       */
+/*   Updated: 2019/11/12 17:07:56 by avieira          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-char	*write_conversion(const char *str, va_list ap, int *ret, int *flags)
+void	init_f(void (*f[9])(va_list, int *, int *))
 {
-	
-	return (str);
+	f[0] = &c;
+	f[1] = &s;
+	f[2] = &p;
+	f[3] = &di;
+	f[4] = &di;
+	f[5] = &uxX;
+	f[6] = &uxX;
+	f[7] = &uxX;
+	f[8] = &%;
+}
+
+const char	*write_conversion(const char *str, va_list ap, int *ret, int *flags)
+{
+	char		set[]="cspdiuxX%";
+	void		(*f[9])(va_list, int *, int *);
+
+	init_f(f);
+
+	return (++str);
 }
 
 
-char	*read_flags(const char *str, va_list ap, int *ret)
+const char	*read_flags(const char *str, va_list ap, int *ret)
 {
 	int			flags[3]; //min_width, max_width, fill (defaut = 0, - => < 0, 0 => > 0)
 	int			i;

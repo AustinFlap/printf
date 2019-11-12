@@ -28,19 +28,29 @@ Specifies a minimum width of 4 and a maximum width of 8 characters. If the strin
 
 c
     S'il n'y a pas de modificateur l, l'argument entier, de type int, est converti en un unsigned char, et le caractère correspondant est affiché. Si un modificateur l est présent, l'argument de type wint_t (caractère large) est converti en séquence multioctet par un appel à wcrtomb(3), avec un état de conversion débutant dans l'état initial. La chaîne multioctet résultante est écrite.
+				write(1, (unsigned char)arg, 1);
+				ret++;
+
 
 
 s
     S'il n'y a pas de modificateur l, l'argument de type const char * est supposé être un pointeur sur un tableau de caractères (pointeur sur une chaîne). Les caractères du tableau sont écrits jusqu'à l'octet nul (« \0 ») final, non compris. Si une précision est indiquée, seul ce nombre de caractères sont écrits. Si une précision est fournie, il n'y a pas besoin de caractère nul. Si la précision n'est pas donnée, ou si elle est supérieure à la longueur de la chaîne, le caractère nul final est nécessaire. Si un modificateur l est présent, l'argument de type const wchar_t * est supposé être un pointeur sur un tableau de caractères larges. Les caractères larges du tableau sont convertis en une séquence de caractères multioctet (chacun par un appel de wcrtomb(3), avec un état de conversion dans l'état initial avant le premier caractère large), ceci jusqu'au caractère large nul final compris. Les caractères multioctet résultants sont écris jusqu'à l'octet nul final (non compris). Si une précision est fournie, il n'y a pas plus d'octets écrits que la précision indiquée, mais aucun caractère multioctet n'est écrit partiellement. Remarquez que la précision concerne le nombre d'octets écrits, et non pas le nombre de caractères larges ou de positions d'écrans. La chaîne doit contenir un caractère large nul final, sauf si une précision est indiquée, suffisamment petite pour que le nombre d'octets écrits la remplisse avant la fin de la chaîne.
+				write(1, arg, ft_strlen(arg));
+				ret += ft_strlen(arg);
 
 
 p
     L'argument pointeur, du type void * est affiché en hexadécimal, comme avec %#x ou %#lx.
+				write(1, "0x", 2);
+				ft_putnbr_base(arg, "0123456789abcdef");
+				ret += 8;
 
 
 d, i
     L'argument int est converti en un chiffre décimal signé. La précision, si elle est mentionnée, correspond au nombre minimal de chiffres qui doivent apparaître. Si la conversion fournit moins de chiffres, le résultat est rempli à gauche avec des zéros. Par défaut la précision vaut 1. Lorsque 0 est converti avec une précision valant 0, la sortie est vide.
-
+				arg = ft_itoa(number);
+				write(1, arg, ft_strlen(arg));
+				ret += ft_strlen(arg));
 
 (o), u, x, X
     L'argument unsigned int est converti en un chiffre octal non signé (o), un chiffre décimal non signé (u), un chiffre hexadécimal non signé (x et X). Les lettres abcdef sont utilisées pour les conversions avec x, les lettres ABCDEF sont utilisées pour les conversions avec X. La précision, si elle est indiquée, donne un nombre minimal de chiffres à faire apparaître. Si la valeur convertie nécessite moins de chiffres, elle est complétée à gauche avec des zéros. La précision par défaut vaut 1. Lorsque 0 est converti avec une précision valant 0, la sortie est vide.
