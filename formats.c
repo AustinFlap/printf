@@ -6,13 +6,13 @@
 /*   By: avieira <avieira@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/12 16:47:34 by avieira           #+#    #+#             */
-/*   Updated: 2019/11/14 18:54:36 by avieira          ###   ########.fr       */
+/*   Updated: 2020/01/16 16:20:08 by avieira          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-void		c(va_list ap, int *ret, int *flags)
+void		c(va_list ap, int *ret)
 {
 	int		len;
 	unsigned char *str;
@@ -32,7 +32,7 @@ void		c(va_list ap, int *ret, int *flags)
 	write(1, str, len);
 	*ret += len;
 }
-void		s(va_list ap, int *ret, int *flags)
+void		s(va_list ap, int *ret)
 {
 	int len;
 	const char *arg;
@@ -55,32 +55,37 @@ void		s(va_list ap, int *ret, int *flags)
 		ft_memcpy(str, arg, size);
 	write(1,str, len);
 	*ret += len;
+	free(str);
 }
 
-void	p(va_list ap, int *ret, int *flags)
+void	p(va_list ap, int *ret)
+{
+	char *point;
+	unsigned long int r = va_arg(ap, unsigned long int);
+
+	point = ft_convert_base(r, "0123456789", "0123456789abcdef");
+	write(1, "0x", 2);
+	write(1, point, ft_strlen(point));
+	*ret += 2 + ft_strlen(point);
+	
+	(void)ap;
+	(void)ret;
+}
+
+void	di(va_list ap, int *ret)
 {
 	(void)ap;
 	(void)ret;
-	(void)flags;
 }
 
-void	di(va_list ap, int *ret, int *flags)
+void	uxX(va_list ap, int *ret)
 {
 	(void)ap;
 	(void)ret;
-	(void)flags;
 }
 
-void	uxX(va_list ap, int *ret, int *flags)
+void	mod(va_list ap, int *ret)
 {
 	(void)ap;
 	(void)ret;
-	(void)flags;
-}
-
-void	mod(va_list ap, int *ret, int *flags)
-{
-	(void)ap;
-	(void)ret;
-	(void)flags;
 }
