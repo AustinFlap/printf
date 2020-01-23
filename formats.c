@@ -6,86 +6,131 @@
 /*   By: avieira <avieira@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/12 16:47:34 by avieira           #+#    #+#             */
-/*   Updated: 2020/01/16 16:20:08 by avieira          ###   ########.fr       */
+/*   Updated: 2020/01/23 07:27:17 by avieira          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
+#include <stdio.h>
 
-void		c(va_list ap, int *ret)
+const char*		c(const char *str, va_list ap, int *ret)
 {
 	int		len;
-	unsigned char *str;
+	unsigned char *print;
 	unsigned char arg;
 
 	arg = va_arg(ap, int);
-	len = 1;
-	if (flags[0] > len)
-		len = flags[0];
-	str = ft_calloc(len + 1, sizeof(char));
-	str[len] = 0;
-	ft_memset(str, ' ', len);
-	if (flags[2] < 0)
-		str[len - 1] = arg;
+	len = width(str);
+	if (len == -1)
+		len = 1;
+	if (!(print = alloc_print(len, 0)))
+		return (NULL);
+	if (minus(str))
+		print[len - 1] = arg;
 	else
-		str[0] = arg;
-	write(1, str, len);
+		print[0] = arg;
+	write(1, print, len);
 	*ret += len;
+	while (*str && *str != 'c')
+		str++;
+	return (str);
 }
-void		s(va_list ap, int *ret)
+
+const char*		s(const char *str, va_list ap, int *ret)
 {
+	//RETRAIT DE ALLOC QUI PRENAIT LA VALEUR DE LEN
 	int len;
 	const char *arg;
-	unsigned char *str;
+	unsigned char *print;
 	int size;
 
 	arg = va_arg(ap, char *);
-	len = ft_strlen(arg);
-	if (flags[0] > len)
-		len = flags[0];
-	str = ft_calloc(len + 1, sizeof(char));
-	str[len] = 0;
-	ft_memset(str, ' ', len);
+	len = width(str);
 	size = ft_strlen(arg);
-	if (flags[1] < size && flags[1] != -1)
-		size = flags[1];
-	if (flags[2] < 0)
-		ft_memcpy(str + len - size, arg, size);
+	if (precision(str) != -1 && size > precision(str))
+		size = precision(str);
+	if (len < size)
+		len = size;
+	if (!(print = alloc_print(len, 0)))
+		return (NULL);
+	if (!minus(str))
+		ft_memcpy(print + len - size, arg, size);
 	else
-		ft_memcpy(str, arg, size);
-	write(1,str, len);
+		ft_memcpy(print, arg, size);
+	write(1, print, len);
 	*ret += len;
-	free(str);
+	free(print);
+	while (*str && *str != 's')
+		str++;
+	return (str);
 }
 
-void	p(va_list ap, int *ret)
+const char*	p(const char *str, va_list ap, int *ret)
 {
+	unsigned char *print;
 	char *point;
-	unsigned long int r = va_arg(ap, unsigned long int);
+	unsigned long int r;
+	int len;
+	int size;
 
-	point = ft_convert_base(r, "0123456789", "0123456789abcdef");
-	write(1, "0x", 2);
-	write(1, point, ft_strlen(point));
-	*ret += 2 + ft_strlen(point);
+	r = va_arg(ap, unsigned long int);
+	point = ft_convert_pointer(r);
+	len = width(str);
+	size = ft_strlen(point);
+	if (len < size)
+		len = size;
+	if (!(print = alloc_print(len, 0)))
+		return (NULL);
+	if (!minus(str))
+		ft_memcpy(print + len - size, point, size);
+	else
+		ft_memcpy(print, point, size);
+	write(1, print, len);
+	*ret += len;
+	free(print);
+	free(point);
+	while (*str && *str != 'p')
+		str++;
+	return (str);
+}
+
+const char*	di(const char *str, va_list ap, int *ret)
+{
+	unsigned char *print;
+	char *n;
+	int len;
+	int size;
+	int neg;
+
+	neg = 0;
+	n = ft_itoa(va_arg(ap, long int));
+	len = width(str);
+	if (*n == '-')
+		neg++;
 	
-	(void)ap;
+	size = ft_strlen(n);
+	if (len < size)
+		len = size;
+	if (!(print = alloc_print(len, zero(str))))
+		return (NULL);
+	
 	(void)ret;
+	(void)print;
+	return (NULL);
 }
 
-void	di(va_list ap, int *ret)
+const char*	uxX(const char *str, va_list ap, int *ret)
 {
 	(void)ap;
+	(void)str;
 	(void)ret;
+	return (NULL);
 }
 
-void	uxX(va_list ap, int *ret)
+const char*	mod(const char *str, va_list ap, int *ret)
 {
 	(void)ap;
+	(void)str;
 	(void)ret;
-}
-
-void	mod(va_list ap, int *ret)
-{
-	(void)ap;
-	(void)ret;
+	return (NULL);
 }

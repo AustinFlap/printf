@@ -6,13 +6,14 @@
 /*   By: avieira <avieira@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/12 14:15:11 by avieira           #+#    #+#             */
-/*   Updated: 2019/11/12 14:16:47 by avieira          ###   ########.fr       */
+/*   Updated: 2020/01/23 02:33:56 by avieira          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
-
+/*
 int main(void)
 {
-	printf("");
-}
+	char a = 'c';
+	printf("%20c", a);
+}*/
