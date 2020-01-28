@@ -6,7 +6,7 @@
 /*   By: avieira <avieira@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/12 14:17:05 by avieira           #+#    #+#             */
-/*   Updated: 2020/01/25 22:31:39 by avieira          ###   ########.fr       */
+/*   Updated: 2020/01/28 05:27:02 by avieira          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,22 +30,24 @@ static int	def_conversion(const char *str)
 	return (-1);
 }
 
-static struct s_flag	def_flag(const char *str)
+static struct s_flag	def_flag(const char *str, char format, va_list ap)
 {
 	t_flag flag;
 
-	flag.width = width(str);
-	flag.precision = precision(str);
-	flag.zero = zero(str);
-	flag.minus = minus(str);
+	flag.width = width(str, format, ap);
+	flag.precision = precision(str, format, ap);
+	flag.minus = minus(str, format);
+	flag.zero = (flag.minus || ((format == 'd' || format == 'i' ||
+		format == 'p') && flag.precision > -1)) ? 0 : zero(str, format);
 
 	return (flag);
 }
 
 static const char	*conversion(const char *str, va_list ap, int *ret)
 {
-	const char *	(*f[9])(const char*, va_list, int*, t_flag);
+	void	(*f[9])(va_list, int*, t_flag);
 	int				i;
+	char set[]="cspdiuxX%";
 
 	f[0] = &c;
 	f[1] = &s;
@@ -57,10 +59,11 @@ static const char	*conversion(const char *str, va_list ap, int *ret)
 	f[7] = &xX;
 	f[8] = &mod;
 	if ((i = def_conversion(str)) != -1)
-		return (f[i](str, ap, ret, def_flag(str)) + 1);
-	write(1, "%", 1);  //Si conversion invalide, on l'ecrit raw
-	va_arg(ap, char *);//Et on passe a l'argument suivant
-	return (str + 1);
+		f[i](ap, ret, def_flag(str, set[i], ap));
+	str++;
+	while (*str || *str == set[i])
+		str++;
+	return (str);
 }
 
 int		ft_printf(const char *str, ...)
@@ -89,10 +92,29 @@ int		ft_printf(const char *str, ...)
 	va_end(ap);
 	return (ret);
 }
-
-int main(void)
+/*
+int main(int ac, char **av)
 {
-	int ret = printf("%x\n", 42);
+	(void)ac;
+	void *a;
+
+	a = malloc(1);
+	printf("PRINTF\n");
+	
+
+	int ret = printf(av[1], atoi(av[2]));
+	
+
 	printf("\nret = %d\n", ret);
+	printf("\n\n");
+	printf("FT_PRINTF\n");
+
+
+	ret = ft_printf(av[1], atoi(av[2]));
+	
+
+	printf("\nret = %d\n", ret);
+	printf("\n\n");
+	free(a);
 	return (0);
-}
+}*/

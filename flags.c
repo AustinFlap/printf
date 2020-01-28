@@ -6,16 +6,16 @@
 /*   By: avieira <avieira@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/23 00:59:03 by avieira           #+#    #+#             */
-/*   Updated: 2020/01/25 18:36:34 by avieira          ###   ########.fr       */
+/*   Updated: 2020/01/28 04:26:37 by avieira          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int		minus(const char *str)
+int		minus(const char *str, char format)
 {
 	str++;
-	while (*str == '0' || *str == '-')
+	while ((*str == '0' || *str == '-') && *str != format)
 	{
 		if (*str == '-')
 			return (1);
@@ -24,10 +24,10 @@ int		minus(const char *str)
 	return (0);
 }
 
-int		zero(const char *str)
+int		zero(const char *str, char format)
 {
 	str++;
-	while (*str == '0' || *str == '-')
+	while ((*str == '0' || *str == '-') && *str != format)
 	{
 		if (*str == '0')
 			return (1);
@@ -36,22 +36,27 @@ int		zero(const char *str)
 	return (0);
 }
 
-int		precision(const char *str)
+int		precision(const char *str, char format, va_list ap)
 {
-	str++;
-	while (*str != '.' && *str)
+	while (*str != format)
 		str++;
-	if (!*str)
-		return (-0);
+	while (*str != '.' && *str != '%')
+		str--;
+	if (*str == '%')
+		return (-1);
+	if (*(str + 1) == '*')
+		return (va_arg(ap, long int));
 	return (ft_atoi(str + 1));
 }
 
-int		width(const char *str)
+int		width(const char *str, char format, va_list ap)
 {
 	str++;
-	while (*str == '0' || *str == '-')
+	while ((*str == '0' || *str == '-') && *str != format)
 		str++;
-	if (ft_isdigit(*str))
+	if (*str == '*')
+		return (va_arg(ap, long int));
+	else if (ft_isdigit(*str))
 		return (ft_atoi(str));
 	return (0);
 }

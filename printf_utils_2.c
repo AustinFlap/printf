@@ -6,17 +6,17 @@
 /*   By: avieira <avieira@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/25 03:03:29 by avieira           #+#    #+#             */
-/*   Updated: 2020/01/25 22:28:36 by avieira          ###   ########.fr       */
+/*   Updated: 2020/01/28 03:33:46 by avieira          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static char	*char_create(unsigned long int nbr, unsigned int l_baseto, int *l_nbr)
+static char	*char_create(unsigned long int nbr, unsigned int l_baseto, int *l_nbr, int l_prefix)
 {
 	char *c_nbr;
 
-	*l_nbr = 3;
+	*l_nbr = 1 + l_prefix;
 	while (nbr >= l_baseto)
 	{
 		nbr /= l_baseto;
@@ -49,19 +49,20 @@ static char	*ft_nbr_base(unsigned long int nbr, char *c_nbr, int l_number)
 	return (c_nbr);
 }
 
-char	*ft_convert_pointer(unsigned long int point)
+char	*ft_convert_to_hex(unsigned long int point, char *prefix)
 {
 	int			l_base_to;
 	char		*c_nbr;
 	int			l_number;
-	
+	int			l_prefix;
+
+	l_prefix = ft_strlen(prefix);
 	l_base_to = 16;
-	c_nbr = char_create(point, l_base_to, &l_number);
+	c_nbr = char_create(point, l_base_to, &l_number, l_prefix);
 	if (!(c_nbr))
 		return (NULL);
 	c_nbr = ft_nbr_base(point, c_nbr, l_number);
-	c_nbr[0] = '0';
-	c_nbr[1] = 'x';
+	ft_memcpy(c_nbr, prefix, l_prefix);
 	return (c_nbr);
 }
 
