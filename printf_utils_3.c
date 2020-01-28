@@ -6,7 +6,7 @@
 /*   By: avieira <avieira@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/08 20:44:21 by avieira           #+#    #+#             */
-/*   Updated: 2020/01/28 04:48:56 by avieira          ###   ########.fr       */
+/*   Updated: 2020/01/28 18:42:43 by avieira          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,10 @@ int		max(int a, int b)
 void    str_toupper(char *str)
 {
 	while (*str)
-		if (*str >= 97 && *str <= 122)
+	{
+	if (*str >= 97 && *str <= 122)
 			*str -= 32;
+		str++;
+	}
     return ;
 }

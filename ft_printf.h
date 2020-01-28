@@ -6,7 +6,7 @@
 /*   By: avieira <avieira@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/12 14:12:37 by avieira           #+#    #+#             */
-/*   Updated: 2020/01/28 05:27:04 by avieira          ###   ########.fr       */
+/*   Updated: 2020/01/28 18:36:52 by avieira          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ typedef struct	s_flag
 	int precision;
 	int zero;
 	int minus;
+	char format;
 }				t_flag;
 
 
@@ -31,13 +32,13 @@ void		place_front(char*, char);
 int		max(int a, int b);
 void		write_conversion(int*, char*, t_flag);
 char *		alloc_print(int, int);
-void 	c(va_list, int*, t_flag);
-void 	s(va_list, int*, t_flag);
-void 	p(va_list, int*, t_flag);
-void 	di(va_list, int*, t_flag);
-void 	u(va_list, int*, t_flag);
-void 	xX(va_list, int*, t_flag);
-void 	mod(va_list, int*, t_flag);
+void 	c(char *, int*, t_flag);
+void 	s(char *, int*, t_flag);
+void 	p(char *, int*, t_flag);
+void 	di(char *, int*, t_flag);
+void 	u(char *, int*, t_flag);
+void 	xX(char *, int*, t_flag);
+void 	mod(char *, int*, t_flag);
 int		ft_isdigit(int c);
 int		ft_atoi(const char *str);
 int		ft_strlen(const char *s);
