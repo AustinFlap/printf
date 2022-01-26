@@ -1,5 +1,5 @@
 # ft_printf
-Re-implementation of printf with the following conversions :
+Re-implementation of `printf` with the following conversions :
 | Conversions       | Description |
 | ------------- |:-------------:|
 | `%c`  | Ascii character |
